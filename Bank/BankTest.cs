@@ -1,7 +1,8 @@
 ﻿using NUnit.Framework;
 using System;
+using BankUtils;
 
-namespace Test
+namespace BankTests
 {
     class BankTest
     {

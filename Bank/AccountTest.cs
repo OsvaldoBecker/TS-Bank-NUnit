@@ -1,7 +1,8 @@
 ﻿using NUnit.Framework;
 using System;
+using BankUtils;
 
-namespace Test
+namespace BankTests
 {
     class AccountTest
     {
@@ -10,9 +11,7 @@ namespace Test
         {
             Account account = new Account("Pedro da Silva", "363-38-3636", 10000, "L6L");
 
-            Assert.True(account.Balance == 0);
             account.MakeDeposit(100);
-            Assert.True(account.Balance == 100);
             account.MakeWithdraw(50);
             Assert.True(account.Balance == 50);
 
