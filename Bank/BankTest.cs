@@ -10,8 +10,8 @@ namespace Test
         {
             Bank bank = new Bank("BNK01");
 
-            bank.CreateAccount("Joao da Silva", "123-54-9876", 2500, "J55");
-            Assert.Throws<InvalidOperationException>(() => bank.CreateAccount("Joao da Silva", "123-54-9876", 2500, "J55"));
+            bank.CreateAccount("Joao da Silva", "123-54-9876", 5000, "J55");
+            Assert.Throws<InvalidOperationException>(() => bank.CreateAccount("Joao da Silva", "123-54-9876", 5000, "J55"));
 
             bank.DeleteAccount("123-54-9876", "J55", "BNK01"); // Clear data base
 
@@ -29,11 +29,29 @@ namespace Test
         }
 
         [Test]
+        public void TestLockAndUnlockAccount()
+        {
+            Bank bank = new Bank("BNK01");
+
+            bank.CreateAccount("Joao da Silva", "123-54-9876", 5000, "J55");
+            bank.MakeDeposit("123-54-9876", 100);
+            Assert.Throws<InvalidOperationException>(() => bank.MakeDeposit("123-54-9876", 5500));
+            Assert.Throws<InvalidOperationException>(() => bank.MakeWithdraw("123-54-9876", "J55", 50));
+            bank.UnlockAccount("123-54-9876", "BNK01");
+            Assert.Throws<InvalidOperationException>(() => bank.UnlockAccount("123-54-9876", "BNK01"));
+            bank.MakeWithdraw("123-54-9876", "J55", 100);
+
+            bank.DeleteAccount("123-54-9876", "J55", "BNK01"); // Clear data base
+
+            Assert.Pass();
+        }
+
+        [Test]
         public void TestAccountPassword()
         {
             Bank bank = new Bank("BNK01");
 
-            bank.CreateAccount("Joao da Silva", "123-54-9876", 2500, "J55");
+            bank.CreateAccount("Joao da Silva", "123-54-9876", 5000, "J55");
             bank.MakeDeposit("123-54-9876", 100);
             Assert.Throws<InvalidOperationException>(() => bank.MakeWithdraw("123-54-9876", "J", 100));
             bank.MakeWithdraw("123-54-9876", "J55", 100);
@@ -48,7 +66,7 @@ namespace Test
         {
             Bank bank = new Bank("BNK01");
 
-            bank.CreateAccount("Joao da Silva", "123-54-9876", 2500, "J55");
+            bank.CreateAccount("Joao da Silva", "123-54-9876", 5000, "J55");
             Assert.Throws<InvalidOperationException>(() => bank.DeleteAccount("123-54-9876", "J55", "BNK"));
             bank.DeleteAccount("123-54-9876", "J55", "BNK01");
 

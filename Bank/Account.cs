@@ -75,15 +75,15 @@ class Account
             throw new InvalidOperationException("Withdrawing error: Operation not allowed with account inactive!");
         else
         {
-            if (value > Balance)
-                throw new InvalidOperationException("Withdrawing error: Insufficient balance!");
-            else if (value <= 0)
+            if (value <= 0)
                 throw new InvalidOperationException("Withdrawing error: Invalid value!");
             else if (value > TransactionLimitValue)
             {
                 Status = AccountStatus.Locked;
                 throw new InvalidOperationException("Withdrawing error: Transaction limit value exceeded, account has been blocked!");
             }
+            else if (value > Balance)
+                throw new InvalidOperationException("Withdrawing error: Insufficient balance!");
             else
             {
                 Balance -= value;

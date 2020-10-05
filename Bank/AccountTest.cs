@@ -6,7 +6,21 @@ namespace Test
     class AccountTest
     {
         [Test]
-        public void TestInvalidInfos()
+        public void TestBalanceConsistency()
+        {
+            Account account = new Account("Pedro da Silva", "363-38-3636", 10000, "L6L");
+
+            Assert.True(account.Balance == 0);
+            account.MakeDeposit(100);
+            Assert.True(account.Balance == 100);
+            account.MakeWithdraw(50);
+            Assert.True(account.Balance == 50);
+
+            Assert.Pass();
+        }
+
+        [Test]
+        public void TestInvalidParameters()
         {
             Account account = null;
 
@@ -41,16 +55,28 @@ namespace Test
         }
 
         [Test]
-        public void TestBalanceConsistence()
+        public void TestTransactionsListConsistency()
         {
             Account account = new Account("Pedro da Silva", "363-38-3636", 10000, "L6L");
 
-            Assert.True(account.Balance == 0);
+            Assert.True(account.Transactions.Count == 0);
+            account.MakeDeposit(50);
             account.MakeDeposit(100);
-            Assert.True(account.Balance == 100);
             account.MakeWithdraw(50);
-            Assert.True(account.Balance == 50);
-            Assert.True(account.Transactions.Count == 2);
+            Assert.True(account.Transactions.Count == 3);
+
+            int deposits = 0;
+            int withdraws = 0;
+
+            foreach (var transaction in account.Transactions)
+            {
+                if (transaction.TransactionType == AccountTransaction.AccountTransactionType.Deposit)
+                    deposits++;
+                else if (transaction.TransactionType == AccountTransaction.AccountTransactionType.Withdraw)
+                    withdraws++;
+            }
+
+            Assert.True(deposits == 2 && withdraws == 1);
 
             Assert.Pass();
         }

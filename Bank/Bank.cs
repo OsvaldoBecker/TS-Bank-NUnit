@@ -7,8 +7,7 @@ class Bank
 
     public Bank(string masterPassword)
     {
-        Console.WriteLine(masterPassword.ToString().Length);
-        if(masterPassword.Length != 5)
+        if (masterPassword.Length != 5)
             throw new InvalidOperationException("Creating bank error: Master password must be 5 characters!");
 
         dataBase = new DataBase();
@@ -60,7 +59,16 @@ class Bank
             Account account = dataBase.FindAccount(accountOwnerSSN);
 
             if (account != null)
-                account.Unlock();
+            {
+                try
+                {
+                    account.Unlock();
+                }
+                finally
+                {
+                    dataBase.UpdateAccount(account);
+                }
+            }
             else
                 throw new InvalidOperationException("Unlocking account error: Account not found!");
         }
@@ -75,8 +83,14 @@ class Bank
 
         if (account != null)
         {
-            account.MakeDeposit(value);
-            dataBase.UpdateAccount(account);
+            try
+            {
+                account.MakeDeposit(value);
+            }
+            finally
+            {
+                dataBase.UpdateAccount(account);
+            }
         }
         else
             throw new InvalidOperationException("Depositing: Account not found!");
@@ -90,8 +104,14 @@ class Bank
         {
             if (accountPassword == account.Password)
             {
-                account.MakeWithdraw(value);
-                dataBase.UpdateAccount(account);
+                try
+                {
+                    account.MakeWithdraw(value);
+                }
+                finally
+                {
+                    dataBase.UpdateAccount(account);
+                }
             }
             else
                 throw new InvalidOperationException("Withdrawing error: Incorrect account password!");
