@@ -9,8 +9,7 @@ namespace BankUtils
 
         public Bank(string masterPassword)
         {
-            if (masterPassword.Length != 5)
-                throw new InvalidOperationException("Creating bank error: Master password must be 5 characters!");
+            CheckMasterPassword(masterPassword);
 
             dataBase = new DataBase();
             this.masterPassword = masterPassword;
@@ -18,6 +17,8 @@ namespace BankUtils
 
         public void CreateAccount(string accountOwnerName, string accountOwnerSSN, float accountTransactionLimitValue, string accountPassword)
         {
+            // Parameters will be checked in Account constructor
+
             Account account = dataBase.FindAccount(accountOwnerSSN);
 
             if (account == null)
@@ -31,6 +32,10 @@ namespace BankUtils
 
         public void DeleteAccount(string accountOwnerSSN, string accountPassword, string masterPassword)
         {
+            CheckAccountOwnerSSN(accountOwnerSSN);
+            CheckAccountPassword(accountPassword);
+            CheckMasterPassword(masterPassword);
+
             if (this.masterPassword == masterPassword)
             {
                 Account account = dataBase.FindAccount(accountOwnerSSN);
@@ -56,6 +61,9 @@ namespace BankUtils
 
         public void UnlockAccount(string accountOwnerSSN, string masterPassword)
         {
+            CheckAccountOwnerSSN(accountOwnerSSN);
+            CheckMasterPassword(masterPassword);
+
             if (this.masterPassword == masterPassword)
             {
                 Account account = dataBase.FindAccount(accountOwnerSSN);
@@ -78,9 +86,29 @@ namespace BankUtils
                 throw new InvalidOperationException("Unlocking account error: Incorrect master password!");
         }
 
+        public Account.AccountStatus GetAccountStatus(string accountOwnerSSN, string accountPassword)
+        {
+            CheckAccountOwnerSSN(accountOwnerSSN);
+            CheckAccountPassword(accountPassword);
+
+            Account account = dataBase.FindAccount(accountOwnerSSN);
+
+            if (account != null)
+            {
+                if (accountPassword == account.Password)
+                    return account.Status;
+                else
+                    throw new InvalidOperationException("Getting account status error: Incorrect account password!");
+            }
+            else
+                throw new InvalidOperationException("Getting account status error: Account not found!");
+        }
+
 
         public void MakeDeposit(string accountOwnerSSN, float value)
         {
+            CheckAccountOwnerSSN(accountOwnerSSN);
+
             Account account = dataBase.FindAccount(accountOwnerSSN);
 
             if (account != null)
@@ -100,6 +128,9 @@ namespace BankUtils
 
         public void MakeWithdraw(string accountOwnerSSN, string accountPassword, float value)
         {
+            CheckAccountOwnerSSN(accountOwnerSSN);
+            CheckAccountPassword(accountPassword);
+
             Account account = dataBase.FindAccount(accountOwnerSSN);
 
             if (account != null)
@@ -120,6 +151,25 @@ namespace BankUtils
             }
             else
                 throw new InvalidOperationException("Withdrawing error: Account not found!");
+        }
+
+
+        private void CheckAccountOwnerSSN(string SSN)
+        {
+            if (SSN.Length != 11)
+                throw new InvalidOperationException("Withdrawing error: SSN must be 11 characters!");
+        }
+
+        private void CheckAccountPassword(string accountPassword)
+        {
+            if (accountPassword.Length != 3)
+                throw new InvalidOperationException("Withdrawing error: Password must be 3 characters!");
+        }
+
+        private void CheckMasterPassword(string masterPassword)
+        {
+            if (masterPassword.Length != 5)
+                throw new InvalidOperationException("Unlocking account error: Master password must be 5 characters!");
         }
     }
 }

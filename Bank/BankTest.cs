@@ -6,15 +6,17 @@ namespace BankTests
 {
     class BankTest
     {
+        // In this implementation, if an assert fails after creating an account, the database will not be cleaned
+
         [Test]
         public void TestCreateDuplicatedAccount()
         {
             Bank bank = new Bank("BNK01");
 
-            bank.CreateAccount("Joao da Silva", "123-54-9876", 5000, "J55");
-            Assert.Throws<InvalidOperationException>(() => bank.CreateAccount("Joao da Silva", "123-54-9876", 5000, "J55"));
+            bank.CreateAccount("Joao da Silva", "111-11-1111", 5000, "J55");
+            Assert.Throws<InvalidOperationException>(() => bank.CreateAccount("Joao da Silva", "111-11-1111", 5000, "J55"));
 
-            bank.DeleteAccount("123-54-9876", "J55", "BNK01"); // Clear data base
+            bank.DeleteAccount("111-11-1111", "J55", "BNK01"); // Clear database
 
             Assert.Pass();
         }
@@ -24,25 +26,35 @@ namespace BankTests
         {
             Bank bank = new Bank("BNK01");
 
-            Assert.Throws<InvalidOperationException>(() => bank.DeleteAccount("123-54-9876", "J55", "BNK01"));
+            Assert.Throws<InvalidOperationException>(() => bank.DeleteAccount("111-12-1111", "J55", "BNK01"));
 
             Assert.Pass();
         }
 
         [Test]
-        public void TestLockAndUnlockAccount()
+        public void TestLockAccount()
         {
             Bank bank = new Bank("BNK01");
 
-            bank.CreateAccount("Joao da Silva", "123-54-9876", 5000, "J55");
-            bank.MakeDeposit("123-54-9876", 100);
-            Assert.Throws<InvalidOperationException>(() => bank.MakeDeposit("123-54-9876", 5500));
-            Assert.Throws<InvalidOperationException>(() => bank.MakeWithdraw("123-54-9876", "J55", 50));
-            bank.UnlockAccount("123-54-9876", "BNK01");
-            Assert.Throws<InvalidOperationException>(() => bank.UnlockAccount("123-54-9876", "BNK01"));
-            bank.MakeWithdraw("123-54-9876", "J55", 100);
+            bank.CreateAccount("Joao da Silva", "111-13-1111", 5000, "J55");
+            Assert.Throws<InvalidOperationException>(() => bank.MakeDeposit("111-13-1111", 5500));
+            Assert.True(bank.GetAccountStatus("111-13-1111", "J55") == Account.AccountStatus.Locked);
 
-            bank.DeleteAccount("123-54-9876", "J55", "BNK01"); // Clear data base
+            bank.DeleteAccount("111-13-1111", "J55", "BNK01"); // Clear database
+
+            Assert.Pass();
+        }
+
+        [Test]
+        public void TestUnlockAccount()
+        {
+            Bank bank = new Bank("BNK01");
+
+            bank.CreateAccount("Joao da Silva", "111-14-1111", 5000, "J55");
+            Assert.Throws<InvalidOperationException>(() => bank.MakeDeposit("111-14-1111", 5500));
+            bank.UnlockAccount("111-14-1111", "BNK01");
+
+            bank.DeleteAccount("111-14-1111", "J55", "BNK01"); // Clear database
 
             Assert.Pass();
         }
@@ -52,12 +64,10 @@ namespace BankTests
         {
             Bank bank = new Bank("BNK01");
 
-            bank.CreateAccount("Joao da Silva", "123-54-9876", 5000, "J55");
-            bank.MakeDeposit("123-54-9876", 100);
-            Assert.Throws<InvalidOperationException>(() => bank.MakeWithdraw("123-54-9876", "J", 100));
-            bank.MakeWithdraw("123-54-9876", "J55", 100);
+            bank.CreateAccount("Joao da Silva", "111-15-1111", 5000, "J55");
+            Assert.Throws<InvalidOperationException>(() => bank.MakeWithdraw("111-15-1111", "J", 100));
 
-            bank.DeleteAccount("123-54-9876", "J55", "BNK01"); // Clear data base
+            bank.DeleteAccount("111-15-1111", "J55", "BNK01"); // Clear database
 
             Assert.Pass();
         }
@@ -67,9 +77,10 @@ namespace BankTests
         {
             Bank bank = new Bank("BNK01");
 
-            bank.CreateAccount("Joao da Silva", "123-54-9876", 5000, "J55");
-            Assert.Throws<InvalidOperationException>(() => bank.DeleteAccount("123-54-9876", "J55", "BNK"));
-            bank.DeleteAccount("123-54-9876", "J55", "BNK01");
+            bank.CreateAccount("Joao da Silva", "111-16-1111", 5000, "J55");
+            Assert.Throws<InvalidOperationException>(() => bank.DeleteAccount("111-16-1111", "J55", "BNK"));
+
+            bank.DeleteAccount("111-16-1111", "J55", "BNK01"); // Clear database
 
             Assert.Pass();
         }
