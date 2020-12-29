@@ -1,6 +1,4 @@
-# TS-Bank-NUnit
-
-Projeto para testes de software feito no Microsoft Visual Studio
+# Projeto para testes de software feito no Microsoft Visual Studio
 
 Suporta Testes de Unidade e Testes de Integração
 - Códigos em C#
