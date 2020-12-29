@@ -1,6 +1,6 @@
-# Projeto para testes de software feito no Microsoft Visual Studio
+# Software testing project
 
-Suporta Testes de Unidade e Testes de Integração
-- Códigos em C#
-- Pacote do framework NUnit para os asserts
-- Pacote de driver do MongoDB para acessar o banco de dados
+Supports Unit Tests and Integration Tests
+- C# codes
+- NUnit framework package for asserts
+- MongoDB driver package to access the database
