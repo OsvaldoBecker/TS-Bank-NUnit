@@ -1,4 +1,4 @@
-# Software testing project
+# Project to perform Unit and Integration tests
 
 Supports Unit Tests and Integration Tests
 - C# codes
